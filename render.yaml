@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: bms-ai-dashboard
+    env: python
+    region: singapore  # Asia ke liye closest server
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: python bms_dashboard_ai.py
+    envVars:
+      - key: BMS_MQTT
+        value: e5c6d611df63436992755767b6967071.s1.eu.hivemq.cloud
+      - key: BMS_MQTT_PORT
+        value: "8883"
+      - key: BMS_MQTT_USER
+        value: smartwater
+      - key: BMS_MQTT_PASS
+        sync: false   # This tells Render this is a SECRET - set manually in Render dashboard
+      - key: BMS_TOPIC_IN
+        value: bms/base
+      - key: BMS_TOPIC_CMD
+        value: bms/cmd
+      - key: BMS_MODEL
+        value: models/bms_model.joblib

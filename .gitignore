@@ -1,0 +1,22 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+bmsenv/
+
+# Mac junk
+.DS_Store
+
+# Sensitive / large files - not for GitHub
+models/*.joblib
+all_logs.csv
+export.csv
+bms_training_data.csv
+*.csv
+
+# Windows batch files (local only)
+*.bat
+
+# Large or temp files
+*.log
+*.resolved
