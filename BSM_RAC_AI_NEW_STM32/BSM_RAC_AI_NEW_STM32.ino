@@ -252,10 +252,11 @@ int socFromV(float vpack) {
 
 // -------------------- DFPlayer helpers --------------------
 uint32_t last_voice_ms = 0;
-const uint32_t MIN_VOICE_GAP_MS = 1200;
+const uint32_t MIN_VOICE_GAP_MS = 1500;
+bool dfp_ready = false; // Set to true only after successful dfp.begin()
 
 bool canSpeak() {
-  return (millis() - last_voice_ms) > MIN_VOICE_GAP_MS;
+  return dfp_ready && ((millis() - last_voice_ms) > MIN_VOICE_GAP_MS);
 }
 bool voicePlay(uint8_t folder, uint8_t file) {
   if (!canSpeak())
@@ -492,11 +493,12 @@ void setup() {
   // DBG.println("\n[Boot] BMS MiniAI (UART map OK, override OK)");
 
   MP3.begin(9600);
-  delay(1200);
-  if (dfp.begin(MP3)) {
-    dfp.volume(100);  // Removed: Setting volume here can freeze some DFPlayer
-                      // clones on boot.
+  delay(2000); // DFPlayer needs time to initialize SD card
+  dfp_ready = dfp.begin(MP3);
+  if (dfp_ready) {
+    dfp.volume(25); // Max is 30. 25 is loud and safe for all DFPlayer clones.
     dfp.EQ(DFPLAYER_EQ_NORMAL);
+    delay(200); // Let volume command settle
   }
 
   ESP.begin(9600);
