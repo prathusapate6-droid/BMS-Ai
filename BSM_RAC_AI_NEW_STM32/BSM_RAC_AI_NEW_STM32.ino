@@ -1,5 +1,5 @@
 /* ================================================================
- * Smart EV BMS — STM32F103C8 prathamesh
+ * Smart EV BMS — STM32F103C8 1
  * ---------------------------------------------------------------
  * ================================================================*/
 
@@ -253,10 +253,9 @@ int socFromV(float vpack) {
 // -------------------- DFPlayer helpers --------------------
 uint32_t last_voice_ms = 0;
 const uint32_t MIN_VOICE_GAP_MS = 1500;
-bool dfp_ready = false; // Set to true only after successful dfp.begin()
 
 bool canSpeak() {
-  return dfp_ready && ((millis() - last_voice_ms) > MIN_VOICE_GAP_MS);
+  return ((millis() - last_voice_ms) > MIN_VOICE_GAP_MS);
 }
 bool voicePlay(uint8_t folder, uint8_t file) {
   if (!canSpeak())
@@ -494,12 +493,11 @@ void setup() {
 
   MP3.begin(9600);
   delay(2000); // DFPlayer needs time to initialize SD card
-  dfp_ready = dfp.begin(MP3);
-  if (dfp_ready) {
-    dfp.volume(25); // Max is 30. 25 is loud and safe for all DFPlayer clones.
-    dfp.EQ(DFPLAYER_EQ_NORMAL);
-    delay(200); // Let volume command settle
-  }
+  dfp.begin(MP3); // Ignore return value for clone compatibility
+  
+  dfp.volume(30); // Max safe volume 
+  dfp.EQ(DFPLAYER_EQ_NORMAL);
+  delay(200); // Let volume command settle
 
   ESP.begin(9600);
 
